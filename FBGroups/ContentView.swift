@@ -8,34 +8,47 @@
 
 import SwiftUI
 
+struct Post {
+    let id: Int
+    let username, text, imageName: String
+}
+
 struct ContentView : View {
-    let posts = ["1", "2", "3","1", "2", "3"]
+    let posts: [Post] = [
+        .init(id: 0, username: "Frank Bara", text: "President of the US, spending most of my time on Twitter!", imageName: "americano"),
+        .init(id: 1, username: "Donald Trump", text: "President of the US, spending most of my time on Twitter!", imageName: "mocha")
+    ]
     
     var body: some View {
         NavigationView {
             List {
                 
-                
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        Text("Trending")
-                        HStack {
-                            Text("Group 1")
-                            Text("Group 1")
-                            Text("Group 1")
-                            Text("Group 1")
-                            Text("Group 1")
-                            Text("Group 1")
-                            Text("Group 1")
-                            Text("Group 1")
+                VStack {
+                    Text("Trending")
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            
+                            HStack {
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                                GroupView()
+                            }
                         }
-                    }
-                    
-                }.frame(height: 100)
+                        
+                    }.frame(height: 200)
+                }
+                
+
                 
                 // post rows
-                ForEach(posts.identified(by: \.self)) { post in
-                    PostView()
+                ForEach(posts.identified(by: \.id)) { post in
+                    PostView(post: post)
                 }
 
             }.navigationBarTitle(Text("Groups"))
@@ -43,7 +56,23 @@ struct ContentView : View {
     }
 }
 
+struct GroupView: View {
+    var body: some View {
+        VStack (alignment: .leading) {
+            Image("icedbrew")
+                .resizable()
+                .cornerRadius(8)
+                .clipped()
+            Text("A bunch of different types of coffee")
+                .lineLimit(nil)
+                .padding(.leading, 0)
+        }.frame(width: 130, height: 170)
+    }
+}
+
 struct PostView: View {
+    let post: Post
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -53,7 +82,7 @@ struct PostView: View {
                     .frame(width: 60, height: 40)
                     .clipped()
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Donald Trump")
+                        Text(post.username)
                             .font(.headline)
                         Text("Posted 8 hours ago")
                             .font(.subheadline)
@@ -67,9 +96,11 @@ struct PostView: View {
                 .padding(.leading, 16)
                 .padding(.trailing, 32)
             
-            Image("mocha")
+            Image(post.imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
+                .frame(height: 350)
+                .clipped()
         }.padding(.leading, -20)
         .padding(.bottom, -8)
 
